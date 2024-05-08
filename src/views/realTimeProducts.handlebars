@@ -1,0 +1,47 @@
+<div class="div-container">
+    <p> Bienvenido, <strong>{{user.first_name}} {{user.last_name}}</strong></p>
+    <p>{{user.email}}</p>
+    <p> rol: <strong>{{user.role}}</strong></p>
+    <a href="/api/sessions/logout">
+        <button>Salir</button>
+    </a>
+</div>
+<div>
+    <form id="product-form">
+        <div>
+            <h1 class="margin-left">Agregando productos con WebSockets</h1>
+            <div class="margin">
+                <label>Nombre</label>
+                <input class="input-global" type="text" id="product-input" name="product-input">
+                <label>Descripción</label>
+                <input class="input-global" type="text" id="description-input" name="description-input">
+                <label>Código</label>
+                <input class="input-global" type="text" id="code-input" name="code-input">
+                <label>Precio</label>
+                <input class="input-global" type="text" id="price-input" name="price-input">
+                <label>Stock</label>
+                <input class="input-global" type="number" id="stock-input" name="stock-input">
+                <label>Categoría</label>
+                <input class="input-global" type="text" id="category-input" name="category-input">
+                <input type="hidden" name="role" id="input-role-add" value={{user.role}}>
+                <input class="input-global" type="hidden" name="owner" id="input-owner-add" value={{user.email}}>
+                <button class="global-button" type="button" id="send-button">Agregar producto</button>
+            </div>
+        </div>
+    </form>
+    <div class="margin">
+        <form id="product-form-delete">
+            <div>
+                <h2>Borrando productos con WebSockets</h2>
+                <label>Id</label>
+                <input class="input-global" type="text" id="id-input" name="id-input">
+                <button class="global-button" type="button" id="send-button-delete">Borrar producto</button>
+            </div>
+        </form>
+    </div>
+    <div id="products-container">
+        <ul id="products-list"></ul>
+    </div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>

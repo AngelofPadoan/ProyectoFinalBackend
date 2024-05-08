@@ -1,0 +1,454 @@
+paths:
+  /api/carts/:
+    get:
+      summary: Get all carts
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Successfully obtained all the cards
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Carts"
+        "400":
+          description: Could not get the carts
+        "500":
+          description: Internal server error
+    post:
+      summary: Create a new cart
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: New product added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/newCart/CreateCart"
+        "400":
+          description: You do not have necessary permissions to add products
+        "500":
+          description: Internal server error
+  /api/carts/{cid}:
+    get:
+      summary: Get a cart by its id "cid"
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Cid is the cart id
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Could get the cart with the id "cid"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/getById/GetCartById"
+        "400":
+          description: Could not obtain the cart with the id "cid"
+        "500":
+          description: Internal server error
+    put:
+      summary: Modifies a list of products in the cart with the "cid"
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Cid is the cart id
+          schema:
+            $type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/body/UpdateCart"
+      responses:
+        "200":
+          description: List of cart products successfully modified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/updateById/UpdateCartById"
+        "400":
+          description: The list of products with the cart id "cartId" could not be modified
+        "500":
+          description: Internal server error
+    delete:
+      summary: Remove all products from a cart
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Cid is the cart id
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: All products from the "cid" cart were successfully removed.
+        "400":
+          description: Not all products were successfully removed from the "cid" cart.
+        "500":
+          description: Internal server error
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: Add a new product to the cart
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Cid is the cart id
+          schema:
+            $type: string
+        - name: pid
+          in: path
+          required: true
+          description: Pid is the product id
+          schema:
+            $type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/body/AddProductToCart"
+      responses:
+        "200":
+          description: A new product was added to the cart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/updateById/UpdateCartById"
+        "400":
+          description: The product could not be added to the cart or you do not have the necessary permissions
+        "500":
+          description: Internal server error
+  /api/carts/{cid}/products/{pid}:
+    put:
+      summary: Modify the quantity of a product in a cart
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Cid is the cart id
+          schema:
+            $type: string
+        - name: pid
+          in: path
+          required: true
+          description: Pid is the product id
+          schema:
+            $type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/body/AddProductToCart"
+      responses:
+        "200":
+          description: Successfully modified product
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/updateById/UpdateCart"
+        "400":
+          description: The quantities of the products could not be updated
+        "500":
+          description: Internal server error
+    delete:
+      summary: Remove products from a cart's product list
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Cid is the cart id
+          schema:
+            $type: string
+        - name: pid
+          in: path
+          required: true
+          description: Pid is the product id
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: The products was removed from the cart
+        "400":
+          description: Could not remove the products from the cart
+        "500":
+          description: Internal server error
+  /api/carts/{cid}/purchase:
+    post:
+      summary: Make the purchase and send an email with the purchase receipt
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Cid is the cart id
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: The purchase was made
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/purchase/PurchaseProducts"
+        "400":
+          description: The purchase could not be made
+        "500":
+          description: Internal server error
+components:
+  schemas:
+    Carts:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Autogenerated cart id
+        products:
+          type: array
+          description: Array of objects where the products that the user purchased are saved, the pid and the quantity are saved
+      example:
+        - _id: ObjectId('658e0c25e649e526667ccf62')
+          products:
+            _id: ObjectId('658dd3c578510e789fd88144')
+            quantity: 1
+  newCart:
+    CreateCart:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Request status
+        payload:
+          type: object
+          properties:
+            _id:
+              type: string
+              description: Autogenerated cart id
+            products:
+              type: array
+              description: Array of objects of the products, the productId and the quantity are saved
+              properties:
+                product:
+                  type: object
+                  description: product
+                  properties:
+                    _id:
+                      type: string
+                      description: Product id
+                    quantity:
+                      type: number
+                      description: Product quantity
+      example:
+        status: "success"
+        payload:
+          _id: ObjectId('658e0c25e649e526667ccf62')
+          products: []
+  getById:
+    GetCartById:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Request status
+        payload:
+          type: object
+          properties:
+            _id:
+              type: string
+              description: Cart id
+            products:
+              type: array
+              description: Array of objects of the products, the productId and the quantity are saved
+              properties:
+                product:
+                  type: object
+                  description: product
+                  properties:
+                    _id:
+                      type: string
+                      description: Product id
+                    quantity:
+                      type: number
+                      description: Product quantity
+      example:
+        status: "success"
+        payload:
+          _id: ObjectId('658e0c25e649e526667ccf62')
+          products:
+            - product:
+                _id: ObjectId('fger6348ydeasd236487')
+                title: Remera blanca
+                description: Remera musculosa blanca
+                price: 5000
+                code: RMB
+                stock: 27
+                category: indumentaria
+                thumbnail: google.com
+                owner: "admin"
+            - product:
+                _id: ObjectId('fger6348ydeasd236488')
+                title: Remera azul
+                description: Remera manga corta azul
+                price: 3333
+                code:  RMCA
+                stock: 33
+                category: indumentaria
+                thumbnail: google.com
+                owner: "premium"
+  updateById:
+    UpdateCart:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Request status
+        payload:
+          type: object
+          description: Updated product list
+          properties:
+            _id:
+              type: string
+              description: Cart id
+            products:
+              type: array
+              description: Cart product list
+              properties:
+                product:
+                  type: object
+                  description: Product info
+                  properties:
+                    _id:
+                      type: string
+                      description: Product id
+                    title:
+                      type: string
+                      description: Product name
+                    descripcion:
+                      type: string
+                      description: Product description
+                    price:
+                      type: number
+                      description: Price of the product
+                    code:
+                      type: string
+                      description: Product code
+                    stock:
+                      type: number
+                      description: Product quantity
+                    category:
+                      type: string
+                      description: Product category
+                    thumbnail:
+                      type: string
+                      description: Product image
+                    owner:
+                      type: string
+                      description: Product creator
+                quantity:
+                  type: number
+                  description: Product quantity
+                _id:
+                  type: string
+                  description: Autogenerated id of general object
+      example:
+        status: "success"
+        payload:
+          _id: "6586edafb7dc291112c7f9af"
+          products:
+            - product:
+                _id: 657f6d0db3f9db4a9c00978a
+                owner: admin
+                title: Remera blanca
+                description: Remera musculosa blanca
+                code: RMB
+                price: 6000
+                stock: 55
+                category: indumentaria
+                thumbnail: google.com
+              quantity: 22
+              _id : 65ff70702c8d9b96f9f07cd2
+            - product:
+                _id: 657f6d40b3f9db4a9c00978c
+                owner: admin
+                title: Remera azul
+                description: Remera manga corta azul
+                code: RMCA
+                price: 3333
+                stock: 22
+                category: indumentaria
+                thumbnail: google.com
+              quantity: 5
+              _id : 65ff70702c8d9b96f9f07cd3
+  purchase:
+    PurchaseProducts:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Request status
+        payload:
+          type: object
+          properties:
+            ticket:
+              type: object
+              description: Ticket with purchase information
+            notStock:
+              type: array
+              description: Array with the products that could not be purchased since their quantity exceeds the stock
+      example:
+        status: "success"
+        payload:
+          ticket:
+            amount: 4333
+            code : a09f519a-bbe2-49fa-b490-c53ff3ed8137
+            date: "dia: 24, mes: 3, año: 2024"
+            purchaser: userEmail@gmail.com
+          notStock:
+            - product:
+                _id: 657f6d0db3f9db4a9c00978a
+            - product:
+                _id: 68556d0db345adb4a9c00999f
+  body:
+    UpdateCart:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Product id to modify its quantity
+        quantity:
+          type: number
+          description: New product quantity
+      example:
+        products:
+          - product: 657f6d0db3f9db4a9c00978a
+            quantity: 32
+          - product: 657f6d40b3f9db4a9c00978c
+            quantity: 5
+    AddProductToCart:
+      properties:
+        quantity:
+          type: number
+          description: New product quantity
+      example:
+        quantity: 5

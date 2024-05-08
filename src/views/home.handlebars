@@ -1,0 +1,24 @@
+<div>
+    <div class="div-container">
+        <p> Bienvenido, <strong>{{user.first_name}} {{user.last_name}}</strong></p>
+        <p>{{user.email}}</p>
+        <p> rol: <strong>{{user.role}}</strong></p>
+        <a href="/api/sessions/logout"><button class="button-role">Salir</button></a>
+        <a class="margin" href="http://localhost:8080/products"><button class="global-button">Comprar</button></a>
+    </div>
+        <h1 clasS="margin-left"> Listado de productos </h1>
+        <ul>
+            {{#each products}}
+                <li>
+                    <strong>Producto:</strong> {{title}}
+                    <strong>Descripción:</strong> {{description}}
+                    <strong>Código:</strong> {{code}}
+                    <strong>Precio:</strong> ${{price}}
+                    <strong>Stock:</strong> {{stock}}
+                    <strong>Categoría:</strong> {{category}}
+                    <strong>Id:</strong> {{_id}}
+                    <strong>Estado:</strong> {{status}}
+                </li>
+            {{/each}}
+        </ul>
+</div>

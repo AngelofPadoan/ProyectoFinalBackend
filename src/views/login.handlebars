@@ -1,0 +1,23 @@
+<div class="div-container">
+    <h1>Login</h1>
+    <form id="loginForm">
+        <label>Email</label>
+        <input name="email">
+        <br/>
+        <label>Contraseña</label>
+        <input name="password" type="password">
+        <a class="textDarkColor" href="/recoverPassword">¿Olvidaste tu contraseña?</a>
+        <input style="margin-top: 15px;" type="submit">
+    </form>
+    <p style="text-align: center"> ¿No estás registrado? <a href="/register">Registrate</a></p>
+    <hr>
+    <p style="display: inline-block ; color: #a9a9a9">o</p>
+    <hr>
+    <div class="github-button-container">
+        <a href="/api/sessions/github" class="github-button">
+            <i class="fab fa-github"></i>
+            Entrar con GitHub
+        </a>
+    </div>
+</div>
+<script src="/js/login.js"></script>

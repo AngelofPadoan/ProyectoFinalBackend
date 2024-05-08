@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Lista de productos</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+<div class="div-container">
+    <p> Bienvenido, <strong>{{user.first_name}} {{user.last_name}}</strong></p>
+    <p>{{user.email}}</p>
+    <p> rol: <strong>{{user.role}}</strong></p>
+    <a href="/api/sessions/logout"><button class="global-button">Salir</button></a>
+</div>
+<div class="div-purchase">
+    <form action="/api/carts/{{cartId}}" method="get">
+        <button type="submit"class="global-button">
+            <i class="material-icons">shopping_cart</i>
+        </button>
+    </form>
+    <form action="/api/carts/{{cartId}}/purchase" method="post">
+        <input type="hidden" name="product" value="{{ product._id }}">
+        <input type="hidden" name="quantity" value=1>
+        <input class="buy-button" type="submit" value="Finalizar compra" >
+    </form>
+</div>
+<h1 class="margin-left">Lista de productos</h1>
+{{#if products.msg.docs.length}}
+    <ul>
+        {{#each products.msg.docs}}
+            <li>
+                <p>{{ this.title }}</p>
+                <p>Precio: {{ this.price }}</p>
+                <p>Categoría: {{ this.category }}</p>
+
+                <a href="/products/{{ this._id }}">Ver Detalles</a>
+
+                <form action="/api/carts/{{../cartId}}/product/{{ this._id }}" method="post">
+                    <input type="hidden" name="product" value="{{ this._id }}">
+                    <input type="hidden" name="quantity" value=1>
+                    <input type="submit" value="Agregar al Carrito">
+                </form>
+            </li>
+        {{/each}}
+    </ul>
+    <!-- Pagination -->
+    {{#if products.msg.hasPrevPage}}
+        <a class="margin" href="{{ products.msg.prevLink }}">Anterior</a>
+    {{/if}}
+
+    {{#if products.msg.hasNextPage}}
+        <a class="margin" href="{{ products.msg.nextLink }}">Siguiente</a>
+    {{/if}}
+{{else}}
+    <p>No hay productos disponibles.</p>
+{{/if}}
+</body>
+</html>

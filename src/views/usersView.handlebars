@@ -1,0 +1,29 @@
+{{#if users}}
+    <div>
+        <h1 class="margin-left" >Panel de usuarios</h1>
+        {{#each users}}
+            <div class="margin">
+                <p><strong>Usuario:</strong> {{this.fullName}}</p>
+                <p><strong>Email:</strong> {{this.email}}</p>
+                <p><strong>Role:</strong> {{this.role}}</p>
+                <form action="/api/users/updateUser" method="post">
+                    <input type="hidden" name="_method" value="PUT">
+                    <input type="hidden" name="uid" value="{{this._id}}">
+                    <select class="select-role" name="role">
+                        <option value="user">User</option>
+                        <option value="premium">Premium</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                    <button class="button-role" type="submit">Cambiar rol</button>
+                </form>
+                <form action="/api/users/deleteUser?id={{this._id}}" method="POST">
+                <input type="hidden" name="_method" value="DELETE">
+                <button class="global-button" type="submit" value="delete">Eliminar Usuario</button>
+                </form>
+
+            </div>
+        {{/each}}
+    </div>
+{{else}}
+    <p>No hay usuarios para mostrar</p>
+{{/if}}

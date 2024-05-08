@@ -1,0 +1,15 @@
+<div>
+    <h1>Documentacion del usuario</h1>
+    <p>Nombre: {{user.first_name}}</p>
+    <p>Email: {{user.email}}</p>
+    <p>ID: {{user._id}}</p>
+    <form action="/api/users/{{user._id}}/documents" enctype="multipart/form-data" method="post">
+
+        <label>Identificacion</label>
+        <input type="file" name="document">
+        <br />
+        <br />
+        <button type="submit">Subir archivos</button>
+    </form>
+
+</div>
